@@ -1,0 +1,41 @@
+import streamlit as st
+import yfinance as yf
+
+st.set_page_config(layout="wide")
+
+st.title("🚀 AI Trading Dashboard")
+
+# Data
+data = yf.download("^NSEI", period="1d", interval="5m")
+
+# Simple Signal Logic
+price = data['Close'].iloc[-1]
+ma = data['Close'].rolling(20).mean().iloc[-1]
+
+if price > ma:
+    signal = "BUY ✅"
+else:
+    signal = "SELL ❌"
+
+confidence = 75
+
+# Layout
+col1, col2 = st.columns(2)
+
+with col1:
+    st.metric("📊 Signal", signal)
+    st.metric("🔥 Confidence", f"{confidence}%")
+
+with col2:
+    st.write("### 📌 AI Analysis")
+    st.write("- Price vs Moving Average")
+    st.write("- Basic Trend Detection")
+
+# Chart
+st.write("### 📈 Live Chart")
+st.line_chart(data['Close'])
+
+# News (dummy for now)
+st.write("### 📰 Market News")
+st.write("- Market reacting to global cues")
+st.write("- Nifty showing momentum")
